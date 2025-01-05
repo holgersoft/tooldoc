@@ -1,0 +1,394 @@
+Some SystemVerilog notes and commands.
+
+task waitChkCdcSatWarn(
+    bit cdcSatWarnExp,
+    int cdcCsMeasMd = 0,
+    bit cdcLswCx2WrEna = 0,
+    bit cdcLeakMeasShortEna = 0
+  );
+  // ...
+endtask
+
+
+class NvmCfg;
+  some_pkg::t_nvmOscSsEna_raw nvmOscSsEna = 1;
+  some_pkg::t_nvmOscSsCdcAlignEna_raw nvmOscSsCdcAlignEna = 0;
+
+  function new(some_pkg::t_nvmOscSsEna_raw nvmOscSsEna);
+    this.nvmOscSsEna = nvmOscSsEna;
+  endfunction
+
+  function void setNvmOscSsEna(some_pkg::t_nvmOscSsEna_raw nvmOscSsEna);
+    this.nvmOscSsEna = nvmOscSsEna;
+  endfunction
+endclass
+
+initial begin
+  NvmCfg nvmCfg;
+  NvmCfg nvmCfgs[$]; // defines a queue
+
+  nvmCfgs = {};
+
+  nvmCfg = new();
+  nvmCfg.nvmOscSsEna = 0;
+  nvmCfgs.push_back(nvmCfg);
+
+  foreach (nvmCfgs[cnt]) begin
+    // cnt is an integer that is declared implicitly
+    setNvmCfg(nvmCfgs[cnt]);
+  end
+end
+
+
+int vars[];
+vars = '{-2, 0, 5};
+foreach (vars[varIdx]) begin
+  // do something with vars[varIdx]
+end
+
+
+static byte a [10] = '{0, 6, 7, 4, 5, 66, 77, 99, 22, 11};
+foreach (a[i]) begin
+  $display("Value of i is %g", i);
+end
+
+
+foreach (some_pkg::f_ramCrcSlowDownSel.repValEnums[slowDownSelIdx]) begin
+  // Assumption: Type of enum representation value is int or uint.
+  int slowDownSelRep;
+  slowDownSelRep = some_pkg::f_ramCrcSlowDownSel.repValEnums[slowDownSelIdx].atoi();
+  // slowDownSelIdx is raw value
+  // some_pkg::f_ramCrcSlowDownSel.repValEnums[slowDownSelIdx] is representation value as string
+  // slowDownSelRep is representation value as integer
+end
+
+
+Data Types
+==========
+Two-state integer types
+-----------------------
+bit             1 bit                   bit [3:0] a_nibble;
+byte            8 bits, signed          byte a, b;
+byte unsigned   8 bits, unsigned        byte unsigned c;
+shortint        16 bits, signed
+shortint unsigned 16 bits, unsigned
+int             32 bits, signed
+int unsigned    32 bits, unsigned
+longint         64 bits, signed
+longint unsigned 64 bits, unsigned
+
+
+Four-state integer types
+------------------------
+reg             1 bit                   reg [7:0] a_byte;
+reg [WID-1:0]   WID bit, unsigned
+reg signed [WID-1:0]  WID bit, signed
+logic           identical to reg in every way
+integer         32 bits, signed 	integer i, j, k;
+integer unsigned 32 bits, unsigned 	integer unsigned i;
+
+
+Non-integer types
+-----------------
+time            64-bit unsigned 	time now;
+shortreal       like float in C 	shortreal f;
+real            like double in C 	double g;
+realtime        identical to real 	realtime now;
+
+enum {circle, ellipse, freeform} c;
+typedef enum {circle, ellipse, freeform} ClosedCurve;
+ClosedCurve c;
+c.num();  // Number of enum items
+
+vcm_mode_enum vcm_mode;
+for (vcm_mode = vcm_mode.first(); ; vcm_mode = vcm_mode.next()) begin
+  // ...
+  if (vcm_mode == vcm_mode.last()) break;
+end
+
+
+struct {
+  int x, y;
+} p;
+p.x = 1;
+p = {1, 2};
+typedef struct packed {
+  int x, y;
+} Point;
+
+string s1;
+s1 = "the string";
+s1.len(); // 10
+s1 = {s1, " more text"};
+s1.len(); // 20
+s1.substr(5, 7); // "tri"
+s1[0]; // the "t" from "the string", i.e. most left character
+
+
+Vector bit-select and part-select addressing
+============================================
+reg [31: 0] big_vect;
+reg [0 :31] little_vect;
+reg [63: 0] dword;
+integer sel;
+
+big_vect[ 0 +: 8] // == big_vect[ 7 : 0]
+big_vect[15 -: 8] // == big_vect[15 : 8]
+
+little_vect[ 0 +: 8] // == little_vect[0 : 7]
+little_vect[15 -: 8] // == little_vect[8 :15]
+
+dword[sel +: 8] // variable part-select with fixed width*
+
+
+String Methods
+==============
+len()                   Returns length of string.
+putc(int i, string s)   Used to assign one character of string.
+putc(int i, byte c)
+getc(int i)             Returns a character.
+toupper()               Returns the uppercase of string.
+tolower()               Returns the lowercase of string.
+compare(string s)       Returns the string compare result .
+icompare(string s)      Returns caseless string compare result
+substr(int i, int j)    Returns the sub string of main string.
+atoi()                  Returns integer value of the decimal represenation in ASCII string.
+atohex()                Returns hex value of the hex represenation in ASCII string.
+atooct()                Returns octal value of the octal represenation in ASCII string.
+atobin()                Returns binary value of the binary represenation in ASCII string.
+atoreal()               Returns real value of the real represenation in ASCII string.
+itoa(integer i)         Stores the ASCII decimal representation of i into str (inverse of atoi).
+hextoa(integer i)       Stores the ASCII hex representation of i into str (inverse of atohex).
+octtoa(integer i)       Stores the ASCII octal representation of i into str (inverse of atooct).
+bintoa(integer i)       Stores the ASCII binary representation of i into str (inverse of atobin).
+realtoa(real r)         Stores the ASCII real representation of i into str (inverse of atoreal).
+
+
+String Operators
+================
+Str1 == Str2
+Str1 != Str2
+<  >  <=  =>
+{Str1,Str2,...,Strn}
+{multiplier{Str}}
+Str[index] ... Same as Str.getc(index)
+
+
+Queues
+======
+integer queue[$] = {0, 1, 2, 3, 4};
+integer i;
+// Insert new element at begin of queue
+queue = {5, queue};
+// get 4th element
+i = queue[4];
+// get last element
+i = queue[$];
+// Insert using method at begining
+queue.push_front(6);
+// Insert using method at end
+queue.push_back(7);
+// Using insert to insert, here 4 is index and 8 is value
+queue.insert(4,8);
+// get first queue element and delete from queue
+i = queue.pop_front();
+// get last queue element and delete from queue
+i = queue.pop_back();
+// Use delete method to delete element at index 4 in queue
+queue.delete(4);
+// Bring the queue elements in random order
+queue.shuffle();
+
+integer prime_q[$] = {2, 3, 5, 7, 11, 13};
+integer odd_q[$];
+prime_q[$] = {3, 5, 7, 11, 13};
+odd_q[$] = {prime_q[0:3], 9, prime_q[4:5]};
+
+insert()        The insert() method inserts the given item at the specified index position.
+delete()        The delete() method deletes the item at the specified index position.
+pop_front()     The pop_front() method removes and returns the first element of the queue.
+pop_back()      The pop_back() method removes and returns the last element of the queue.
+push_front()    The push_front() method inserts the given element at the front of the queue.
+push_back()     The push_back() method inserts the given element at the end of the queue.
+size()          The size() method returns the number of items in the queue. If the queue is empty, it returns 0.
+find() – returns all the elements satisfying the given expression
+find_index() – returns the indexes of all the elements satisfying the given expression
+find_first() – returns the first element satisfying the given expression
+find_first_index() – returns the index of the first element satisfying the given expression
+find_last() – returns the last element satisfying the given expression
+find_last_index() – returns the index of the last element satisfying the given expression
+
+byte q1[$:127] // Queue with max size of 128
+
+Dynamic Array
+=============
+int dynIntArr[];
+dynIntArr = new[4]; // dynamic array with 4 elements
+dynIntArr = new[6]; // resized to 6 elements, old values will get deleted
+dynIntArr = new[8](dynIntArr);  // resize to 8 elements, old values are retained
+dynIntArr = {1, 2, 3, 4};
+foreach (dynIntArr[idx]) $display("Value: %0d", dynIntArr[idx]);
+
+new[...] –> allocates the storage.
+size()   –> returns the current size of a dynamic array.
+delete() –> empties the array, resulting in a zero-sized array.
+
+
+Classes
+=======
+class Abc;
+endclass
+
+class Def extends Abc;
+endclass
+
+Abc abc = new();
+
+// Declare parameterized class
+class <name_of_class> #(<parameters>);
+class Trans #(addr = 32);
+	
+// Override class parameter
+<name_of_class> #(<parameters>) <name_of_inst>;
+Trans #(.addr(16)) obj;
+
+// Derive from parameterized class
+class TransExt #(addr2 = 16) extends Trans #(.addr(addr2));
+
+// "T" is a parameter that is set to have a default value of "int"
+// Hence "items" will be "int" by default 
+class Stack #(type T = int);
+  T item;
+  function T add_a(T a); 	
+    return item + a;
+  endfunction
+endclass
+
+Stack st;               // st.item is by default of int type
+Stack #(bit[3:0]) bs; 	// bs.item will become a 4-bit vector
+Stack #(real) rs; 	// rs.item will become a real number
+
+
+case (1)
+  $cast(Def, abc): doDef(); // abc is of type Def, including type Abc
+  $cast(Abc, abc): doAbc(); // abc is of type Abc, but not Def
+  default: doOther(); // abc is not derived from Abc
+endcase
+
+
+task waitCdcLeakMeasRst(realtime timeout = 5ms);
+  // Some simulators have a problem with the disable fork. It works if there is an additional fork around it to detach the inner fork.
+  fork begin
+    fork
+      begin
+        wait (cdcLeakMeasRst == 1'b1);
+      end
+      begin
+        waitRealTime(timeout);
+        throwError("Time-out while waiting for condition 'cdcLeakMeasRst == 1'b1'.");
+      end
+    join_any
+    disable fork;
+  end join
+endtask
+
+
+Associative Arrays (dictionary)
+===============================
+http://www.asic-world.com/systemverilog/data_types13.html
+data_type array_id [index_type];
+string ARY[string][string] = '{"A": '{"0": "abc", "1": "def"}, "B": '{"0": "ghi"}};
+int arr[string];
+string idx;
+arr["abc"] = 5;
+arr["xyz"] = 3;
+size of array: arr.num()
+existence: arr.exists("def") (yields in 0 or 1)
+arr.delete("abc")
+if (arr.first(idx)) ... // assigns smallest index to idx, true if there are elements in arr
+if (arr.last(idx)) ... // same with largest index
+if (arr.first(idx)) begin
+  // Do something with smallest index arr[idx]
+  while (arr.next(idx)) begin
+    // Do something with following arr[idx]
+  end
+end
+// Or start with arr.last(idx) and iterate over arr.prev(idx)
+
+
+Functional Coverage
+===================
+
+covergroup memCovgrp @(posedge en);
+  addrCovpt: coverpoint addr {
+    bins low = {0, 50};
+    bins med = {51, 150};
+    bins high = {151, 255};
+  }
+  parCovpt: coverpoint par {
+    option.at_least = 2;
+    bins even = {0};
+    bins odd = {1};
+  }
+  rwCovpt: coverpoint rw {
+    bins read = {0};
+    bins write = {1};
+  }
+endgroup
+
+// Instance of covergroup memory
+memCovgr i_memCovgrp = new();
+
+
+Randomization
+=============
+int abc;
+assert (std::randomize(abc) with {
+  // For ranges [a:b] a must be smaller than b. 
+  abc inside {[0:3], 5, [10:12]};
+  abc < 100;
+  // a := x: a has weight x
+  // [a:b] := x: Each element in [a:b] has weight x
+  // a :/ x: Same as a := x
+  // [a:b] :/ x: The Range [a:b] has weight x
+  // Higher weight means that it is selected more often
+  abc dist {[0:3] := 1, 5 := 2, [10:12] :/ 3};
+
+  if (xyz < 2) abc == 0;
+  else abc inside {[0:5]};
+  // No begin/end is allowed in if/else
+}) else $error("abc randomization failed.");
+
+
+Operators Precedence and Associativity
+======================================
+The highest precedence is at the top of the table.
+
+Precedence                                Associativity
+-----------------------------------------+-------------
+() [] :: .                                left
++ - ! ~ & ~& | ~| ^ ~^ ^~ ++ -- (unary)
+**                                        left
+* / %                                     left
++ - (binary)                              left
+<< >> <<< >>>                             left
+< <= > >= inside dist                     left
+== != === !== ==? !=?                     left
+& (binary)                                left
+^ ~^ ^~ (binary)                          left
+| (binary)                                left
+&&                                        left
+||                                        left
+?: (conditional operator)                 right
+->                                        right
+= += -= *= /= %= &= ^= |= <<= >>= <<<= >>>= := :/ <=
+                                          none
+{} {{}}                                   concatenation
+
+
+Assertions
+==========
+|->     overlapped implication, right-hand side is checked on the same clock tick
+|=>     non-overlapped implication, right-hand side is checked on the next clock tick
+##[1:3]  in one, two, or three clocks
+s1 |=> s2;    is equivalent to    s1 ##1 1 |-> s2;
