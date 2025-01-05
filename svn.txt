@@ -1,0 +1,62 @@
+Create a repository
+-------------------
+> svnadmin create /path/to/svnroot
+
+Import files into the repository
+--------------------------------
+> svn import LocalDir file:///path/to/svnroot/ProjectName
+- the content of LocalDir, e.g. LocalDir/file, will be available under
+  file:///path/to/svnroot/ProjectName, e.g. .../ProjectName/file
+
+Create a local copy
+-------------------
+> svn checkout file:///path/to/svnroot/ProjectName [localName]
+- this will create the directory ProjectName in the current directory
+- the copy will be named localName if this optional argument is given
+
+Un-Deleting a file
+------------------
+- find the revision the file was present the last time
+> svn copy --revision nn repository/path/file file
+
+Ignore files or directories
+---------------------------
+> svn propedit svn:ignore path...
+-- or --
+> svn propset svn:ignore -F file_with_ignore_pattern path...
+
+- path is the directory the ignored files are in, usually . (dot)
+- after that the change needs to be commited:
+> svn update .
+> svn commit -N -m "Ignore pattern updated." .
+
+Change the commit comment
+-------------------------
+echo -n "Here is the new, correct log message." > /tmp/newlog.txt
+svnadmin setlog path/to/repo /tmp/newlog.txt --bypass-hooks -r 388
+
+Discard incoming changes
+------------------------
+- in case a local file is newer than a commit from someone else:
+> svn update --accept mine-full path...
+
+Switch to a different branch
+----------------------------
+> svn switch ^/branches/my-branch
+> svn switch ^/trunk
+
+Copy a repository with history
+------------------------------
+Version 1: Copy the repository on the file system level
+Version 2: See http://svnbook.red-bean.com/en/1.7/svn.reposadmin.maint.html#svn.reposadmin.maint.replication
+  - create an empty repository: svnadmin create copyrepo
+  - create a pre-revprop-change hook that has a 0 exit status in copyrepo
+  - svnsync initialize file:///copyrepo http://sourcerepo
+  - svnsync synchronize file:///copyrepo http://sourcerepo
+
+Links
+-----
+http://subversion.apache.org/ - Home page of the subversion project
+http://svnbook.red-bean.com/ - Book: Version Control with Subversion
+http://www.cs.put.poznan.pl/csobaniec/Papers/svn-refcard.pdf
+   - Subversion Quick Reference Card

@@ -1,0 +1,148 @@
+First time user setup, once per account:
+  git config --global user.name "user"
+  git config --global user.email "user@host.example.com"
+  * To add the host name helps to separate the commits from the different hosts for host specific modifications.
+
+Show configuration:
+  git config --list
+
+Create an empty Git repository:
+  mkdir my_project
+  cd my_project
+  git init
+
+Create a Git repository from en existing directory:
+  cd my_project
+  git init
+  git add .
+  git commit -m "Added initial project data."
+
+Clone an existing repository:
+  * Filesystem:
+    * Uses hardlinks and direct copy operations, i.e. fast:
+      git clone /srv/git/my_project.git [directory]
+    * Uses regular data transfer functions, less efficient:
+      git clone file:///srv/git/my_project.git [directory]
+  * SSH protocol:
+    git clone [user@]host:/srv/git/my_project.git [directory]
+    git clone ssh://[user@]host[:port]/srv/git/my_project.git [directory]
+  * Git protocol:
+    git clone git://host.xz[:port]/path/to/repo.git [directory]
+
+Add files, stageing a file:
+  git add file...
+
+Show status:
+  git status [-s]
+
+Show local modificatins (that are not staged yet):
+  git diff
+
+Undo local modifications:
+  git checkout -- file...
+
+Show modifications that are in the staging area, i.e. that will be committed:
+  git diff --staged
+
+Unstaging a file:
+  git reset HEAD file...
+
+Commit changes:
+  git commit [-m "Message."] [file...]
+  * This commits that staging area.
+  * To commit modified and staged files:
+    git commit -a [-m "Message."]
+  * To update the previous commit after staging the update:
+    git commit --amend
+  * To change the previous commit message right after the previous commit:
+    git commit --amend -m "Updated message."
+
+Rename a file:
+  git mv file_old file_new
+  * Git doesn't record renames.
+  * This stages the deletion of file_old and the addition of file_new.
+
+Delete files:
+  git rm file...
+
+Show history:
+  git log [-<number of commits>] [file...]
+
+To get a file from the repository, i.e. an older version:
+  git show <HASH>:path/from/repo/root/to/file
+
+Show remote repositories:
+  git remote -v
+
+Push changes to upstream repository:
+  git push [origin [master]]
+
+Get changes from upstream repository:
+  git fetch [origin]
+  * Fetches the changes to the local repository but does not merge them into
+    the workspace.
+
+Merge upstream changes into workspace (after fetching them):
+  git merge [origin/master]
+
+Get changes from upstream repository and merge into workspace:
+  git pull
+
+Creating a feature branch:
+  * Just create the branch:
+    git fetch [origin]
+    git branch featureA master
+  * Create the branch and switch to it:
+    git fetch [origin]
+    git checkout -b featureA origin/master
+
+Merging a feature branch into master:
+  git fetch origin
+  git checkout master
+  git merge featureA
+  git push origin master
+  * Or with rebase:
+  git fetch origin
+  git checkout master
+  git rebase featureA
+  git push origin master
+
+Add more remote repositories:
+  * This adds repositories to the initial "origin".
+  git remote add some_name URL
+
+Ignoring files:
+  * Edit .gitignore in working copy toplevel directory (or subdirectories)
+# ignore all .a files
+*.a
+# but do track lib.a, even though you're ignoring .a files above
+!lib.a
+# only ignore the TODO file in the current directory, not subdir/TODO
+/TODO
+# ignore all files in the build/ directory
+build/
+# ignore doc/notes.txt, but not doc/server/arch.txt
+doc/*.txt
+# ignore all .pdf files in the doc/ directory and any of its subdirectories
+doc/**/*.pdf
+
+Setting up an SSH based repository:
+  * Optionally create an DNS alias gitserver that points to the server machine.
+  * Create an empty repository or clone an existing repository.
+    Directory ends with suffix .git:
+    git init --bare /data/srv/git/my_project.git
+    git clone --bare /path/to/my_project /data/srv/git/my_project.git
+  * Optionally copy repository to SSH server if it was not created on the server:
+    scp -rp path/to/my_project.git [user@]host:/data/srv/git/
+  * Clone remote repository:
+    git clone [user@]host:/data/srv/git/my_project.git
+  * Optionally set group write permissions, if needed:
+    ssh [user@]host
+    cd /data/srv/git/my_project.git
+    git init --bare --shared
+
+  * Or create repository locally and push to server:
+    cd my_project
+    git init
+    git remote add origin [user@]host:/data/srv/git/my_project.git
+    git push origin master
