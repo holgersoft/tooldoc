@@ -107,6 +107,15 @@ Merging a feature branch into master:
   git rebase featureA
   git push origin master
 
+Show local branches, i.e. branches that were checked out in the past:
+  git branch
+
+Show all available branches:
+  git branch -r
+
+Switch to a branch:
+  git checkout <branch>
+
 Add more remote repositories:
   * This adds repositories to the initial "origin".
   git remote add some_name URL
