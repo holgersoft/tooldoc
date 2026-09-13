@@ -466,3 +466,26 @@ $onehot 	Returns true if exactly one bit is 1. if no bits or more than one bit i
 $onehot0 	Returns true is no bits or just 1 bit in the expression is 1
 $isunknown 	Returns true if any bit in the expression is 'X' or 'Z'
 
+
+Streaming Operators
+===================
+https://www.consulting.amiq.com/2017/05/29/how-to-pack-data-using-systemverilog-streaming-operators/
+
+Byte variables to an int:
+    static byte a     = 8'h8C;
+    static byte b     = 8'h00;
+    static byte c     = 8'hA4;
+    static byte d     = 8'hFF;
+    static int  value = {>>{a, b, c, d}};  // 0x8C00A4FF
+
+Array of bytes to an int:
+    static bit [7:0] array[4] = '{ 8'h8C, 8'h00, 8'hA4, 8'hFF };
+    static int       value    = {>>{array}};  // 0x8C00A4FF
+    
+Reverse the elements of a byte array and pack them into an int:
+    bit [7:0] array[4] = '{ 8'h8C, 8'h00, 8'hA4, 8'hFF };
+    int       value    = {<<8{array}};
+
+Reverse the bits in a byte:
+    bit [7:0] value_a = 8'h8C;
+    bit [7:0] value_b = {<<{value_a}};
