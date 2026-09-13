@@ -74,6 +74,20 @@ Delete files:
 Show history:
   git log [-<number of commits>] [file...]
 
+Show commit details:
+  git show <hash>
+
+Undo the last commit, that was not pushed yet:
+  git reset --soft HEAD~1
+
+Undo a commit:
+  * Find the hash
+  git revert <hash>
+  * If it is a merge commit and the merge is to be undone:
+  git show <hash>
+    * First parent hash is previous commit in affected branch, second parent is from branch that was merged
+  git revert -m 1 <hash>
+
 To get a file from the repository, i.e. an older version:
   git show <HASH>:path/from/repo/root/to/file
 
