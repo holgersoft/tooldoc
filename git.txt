@@ -118,15 +118,51 @@ Merge upstream changes into workspace (after fetching them):
 Get changes from upstream repository and merge into workspace:
   git pull
 
-Creating a feature branch:
+Get version from upstream repository, discard local changes:
+  git reset --hard origin/branch
+
+Get changes from upstream repository, put local changes on top of incoming changes:
+  git rebase --interactive origin/main
+
+Modify last commit:
+  git commit --amend
+
+Modify multiple commits or commit that is not the last commit:
+  * Modification can be content or commit message
+  * Find hash oldest commit to modify, e.g. 1234fedc
+  git rebase --interactive 1234fedc~
+  * Change "pick" to "edit" of commits that are to be modified
+  * Rebase will stop at the edit commits. Do the edits, then
+  git add ...
+  git commit --amend
+  git rebase --continue
+
+Push changes after rebase:
+  git push origin featureA --force-with-lease
+
+Create a feature branch that tracks main:
   * Just create the branch:
     git fetch [origin]
     git branch featureA main
   * Create the branch and switch to it:
     git fetch [origin]
-    git checkout -b featureA origin/master
+    git checkout -b featureA origin/main
+  * Push to remote after changes were committed:
+    git push origin featureA
 
-Merging a feature branch into master:
+Create a feature branch:
+  * Just create the branch:
+    git checkout main
+    git fetch [origin]
+    git branch featureA
+  * Create the branch and switch to it:
+    git checkout main
+    git pull [origin]
+    git checkout -b featureA
+  * Push to remote after changes were committed:
+    git push --set-upstream origin featureA
+
+Merging a feature branch into main:
   git fetch origin
   git checkout main
   git merge featureA
