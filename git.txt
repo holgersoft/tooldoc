@@ -170,3 +170,11 @@ Checkout a specific sub-module:
 Change branch of a sub-module:
   git submodule set-branch -b v1.0.0 <submodule>
 
+
+Visual Studio Code
+------------------
+  * To commit lines in a file instead the complete file:
+    * Open Changes (top right), or context menu Open Change -> Open Line Changes with Previous Revision
+    * Select lines that are to be committed, either all or ranges with Alt+select (or Ctrl+select after Selection->Switch to Ctrl+Clock for Multi-Cursor)
+    * Stage Selected Ranges (context menu)
+    * Commit staged changes
