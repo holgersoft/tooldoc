@@ -155,3 +155,18 @@ Setting up an SSH based repository:
     git remote add origin [user@]host:/data/srv/git/my_project.git
     git push origin main
 
+
+Modules
+-------
+Show sub-module status:
+  git submodule status
+
+Checkout all sub-modules, after initial clone:
+  git submodule update --init --recursive
+
+Checkout a specific sub-module:
+  git submodule update --init <submodule>
+
+Change branch of a sub-module:
+  git submodule set-branch -b v1.0.0 <submodule>
+
