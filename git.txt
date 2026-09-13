@@ -88,6 +88,11 @@ Undo a commit:
     * First parent hash is previous commit in affected branch, second parent is from branch that was merged
   git revert -m 1 <hash>
 
+Integrate a commit from another branch:
+  git cherry-pick <commit>
+  * <commit> is one of:
+    * sha1 hash, e.g. dae86e1950b1277e545cee180551750029cfe735, dae86e
+
 To get a file from the repository, i.e. an older version:
   git show <HASH>:path/from/repo/root/to/file
 
