@@ -96,6 +96,12 @@ Integrate a commit from another branch:
 To get a file from the repository, i.e. an older version:
   git show <HASH>:path/from/repo/root/to/file
 
+Rename a branch:
+  While being on branch that shall be renamed:
+    git branch --move <new name>
+  From any branch:
+    git branch --move <old name> <new name>
+
 Show remote repositories:
   git remote -v
 
