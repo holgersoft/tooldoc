@@ -125,6 +125,16 @@ s1.substr(5, 7); // "tri"
 s1[0]; // the "t" from "the string", i.e. most left character
 
 
+Arrays
+======
+reg a; // a 1 bit value
+reg [7:0] a; // an 8 bit vector / a packed array of 8x 1 bit values.
+reg a [0:7]; // an unpacked array of 8x 1 bit values
+reg [7:0] a [0:3]; // an unpacked array of 4x 8 bit values.
+reg [3:0] [7:0] a; // a 2D packed array / a packed array of 4x 8 bit values
+reg [3:0] [7:0] a [0:3][0:15]; // a 2D unpacked array of 16x4x packed array of 4x 8 bit vectors.
+
+
 Vector bit-select and part-select addressing
 ============================================
 reg [31: 0] big_vect;
