@@ -131,6 +131,33 @@ Add more remote repositories:
   * This adds repositories to the initial "origin".
   git remote add some_name URL
 
+When a branch is created, it will follow the original branch. To change the original branch:
+  # Change to branch
+  git branch --set-upstream-to origin/<main>
+
+Merge the changes of a merge request into another branch, e.g. into another release branch
+  * In Gitlab:
+    * Open merge request
+    * Go to "Merged by" section
+    * Follow the "Cherry-pick" link
+    * Select project, branch, and whether to start a new merge request
+    * This will create a branch cherry-pick-12345678 with an automatic commit that contains the cherry-picked merge commit. This description of the automatic commit contains merges from the main branch, that are actually not part of the commit. I.e. the patch that was merged, i.e. all changes in the original branch, will be part of the commit.
+    * There is no way to create a new branch with the individual commits of the original feature branch cherry-picked
+  * On command line
+    * It does not work to cherry-pick the merge commit, this will include merges from the main branch into the original feature branch
+    * The commits of the original feature branch need to be cherry-picked one-by-one into a new feature branch that then is turned into a merge request
+    * Create a new feature branch from the branch the changes are merged to the usual way
+    * Option 1:
+      * Find commit the feature branch is based on (A), last commit in feature branch (B), and last commit in main branch before the merge (C)
+      git log A..B --not C
+    * Option 2:
+      * Open the Gitlab merge request Commits page and cherry pick from bottom to top
+      * On Linux and a standard terminal one can copy+paste "git cherry-pick " by selecting it and paste with middle mouse button, the commit hash can be copied by clicking on the copy widget next to the hash and paste with Ctrl+Shift+V in the terminal (or terminal context menu)
+    * Cherry pick all commits, but not "Merge ... into <feature branch>"
+    * Push
+    * Create merge request, compare with original merge request
+    
+
 Ignoring files:
   * Edit .gitignore in working copy toplevel directory (or subdirectories)
 # ignore all .a files
