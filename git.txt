@@ -2,6 +2,7 @@ First time user setup, once per account:
   git config --global user.name "user"
   git config --global user.email "user@host.example.com"
   * To add the host name helps to separate the commits from the different hosts for host specific modifications.
+  git config --global alias.st status
 
 Show configuration:
   git config --list
