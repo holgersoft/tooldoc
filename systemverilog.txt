@@ -237,8 +237,8 @@ queue.shuffle();
 
 integer prime_q[$] = {2, 3, 5, 7, 11, 13};
 integer odd_q[$];
-prime_q[$] = {3, 5, 7, 11, 13};
-odd_q[$] = {prime_q[0:3], 9, prime_q[4:5]};
+prime_q = {3, 5, 7, 11, 13};
+odd_q = {prime_q[0:3], 9, prime_q[4:5]};
 
 insert()        The insert() method inserts the given item at the specified index position.
 delete()        The delete() method deletes the item at the specified index position.
