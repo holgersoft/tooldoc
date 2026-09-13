@@ -36,6 +36,9 @@ Add files, stageing a file:
 Show status:
   git status [-s]
 
+Show current hash:
+  git rev-parse HEAD
+
 Show local modificatins (that are not staged yet):
   git diff
 
