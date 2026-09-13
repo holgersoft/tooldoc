@@ -53,13 +53,15 @@ Unstaging a file:
 
 Commit changes:
   git commit [-m "Message."] [file...]
-  * This commits that staging area.
+  * This commits the staging area.
   * To commit modified and staged files:
     git commit -a [-m "Message."]
   * To update the previous commit after staging the update:
     git commit --amend
   * To change the previous commit message right after the previous commit:
-    git commit --amend -m "Updated message."
+    git commit --amend [-m "Updated message."]
+  * To push the change if it was changed after a previous push (use with care!):
+    git push --force-with-lease
 
 Rename a file:
   git mv file_old file_new
