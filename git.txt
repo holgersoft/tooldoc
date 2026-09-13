@@ -75,7 +75,7 @@ Show remote repositories:
   git remote -v
 
 Push changes to upstream repository:
-  git push [origin [master]]
+  git push [origin [main]]
 
 Get changes from upstream repository:
   git fetch [origin]
@@ -83,29 +83,28 @@ Get changes from upstream repository:
     the workspace.
 
 Merge upstream changes into workspace (after fetching them):
-  git merge [origin/master]
-
+  git merge [origin/main]
 Get changes from upstream repository and merge into workspace:
   git pull
 
 Creating a feature branch:
   * Just create the branch:
     git fetch [origin]
-    git branch featureA master
+    git branch featureA main
   * Create the branch and switch to it:
     git fetch [origin]
     git checkout -b featureA origin/master
 
 Merging a feature branch into master:
   git fetch origin
-  git checkout master
+  git checkout main
   git merge featureA
-  git push origin master
+  git push origin main
   * Or with rebase:
   git fetch origin
-  git checkout master
+  git checkout main
   git rebase featureA
-  git push origin master
+  git push origin main
 
 Show local branches, i.e. branches that were checked out in the past:
   git branch
@@ -154,4 +153,5 @@ Setting up an SSH based repository:
     cd my_project
     git init
     git remote add origin [user@]host:/data/srv/git/my_project.git
-    git push origin master
+    git push origin main
+
