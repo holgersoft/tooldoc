@@ -174,14 +174,40 @@ bintoa(integer i)       Stores the ASCII binary representation of i into str (in
 realtoa(real r)         Stores the ASCII real representation of i into str (inverse of atoreal).
 
 
+Strings
+=======
 String Operators
-================
+----------------
 Str1 == Str2
 Str1 != Str2
 <  >  <=  =>
 {Str1,Str2,...,Strn}
 {multiplier{Str}}
 Str[index] ... Same as Str.getc(index)
+
+String Functions
+----------------
+str.len()		Returns the number of characters in the string
+str.putc()		Replaces the ith character in the string with the given character
+str.getc()		Returns the ASCII code of the ith character in str
+str.tolower()		Returns a string with characters in str converted to lowercase
+str.compare(s)		Compares str and s, as in the ANSI C strcmp function
+str.icompare(s)		Compares str and s, like the ANSI C strcmp function
+str.substr (i, j)	Returns a new string that is a substring formed by characters in position i through j of str
+
+String Conversion Functions
+---------------------------
+All modify the string
+str.atoi()	Returns the integer corresponding to the ASCII decimal representation in str
+str.atohex()	Interprets the string as hexadecimal
+str.atooct()	Interprets the string as octal
+str.atobin()	Interprets the string as binary
+str.atoreal()	Returns the real number corresponding to the ASCII decimal representation in str
+str.itoa(i)	Stores the ASCII decimal representation of i into str
+str.hextoa(i)	Stores the ASCII hexadecimal representation of i into str
+str.octtoa(i)	Stores the ASCII octal representation of i into str
+str.bintoa(i)	Stores the ASCII binary representation of i into str
+str.realtoa(r)	Stores the ASCII real representation of r into str
 
 
 Queues
